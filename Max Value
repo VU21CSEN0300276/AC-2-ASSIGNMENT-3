@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+typedef struct {
+    int index;
+    int value;
+} Pair;
+
+int findMaxValueOfEquation(int** points, int pointsSize, int* pointsColSize, int k) {
+    Pair* deque = (Pair*)malloc(pointsSize * sizeof(Pair));
+    int front = 0, back = 0;  
+    int maxVal = INT_MIN;
+
+    for (int j = 0; j < pointsSize; j++) {
+        int xj = points[j][0], yj = points[j][1];
+
+        
+        while (front < back && points[deque[front].index][0] < xj - k) {
+            front++;
+        }
+
+        
+        if (front < back) {
+            int i = deque[front].index;
+            maxVal = MAX(maxVal, points[i][1] + yj + (xj - points[i][0]));
+        }
+
+        
+        int newVal = yj - xj;
+        while (front < back && deque[back - 1].value <= newVal) {
+            back--;
+        }
+
+        
+        deque[back++] = (Pair){j, newVal};
+    }
+
+    free(deque);
+    return maxVal;
+}
