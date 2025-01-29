@@ -1,0 +1,37 @@
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stdio.h>
+
+#define MAX_HASH_SIZE (1 << 20) 
+
+bool hasAllCodes(char* s, int k) {
+    int n = strlen(s);
+    if (n < k) return false;
+
+    bool hashSet[MAX_HASH_SIZE] = {false};  
+    int totalNeeded = 1 << k; 
+    int found = 0;
+    int hashValue = 0;
+
+    for (int i = 0; i < k; i++) {
+        hashValue = (hashValue << 1) | (s[i] - '0');
+    }
+    hashSet[hashValue] = true;
+    found++;
+
+    
+    for (int i = k; i < n; i++) {
+        
+        hashValue = ((hashValue << 1) & (totalNeeded - 1)) | (s[i] - '0');
+
+        if (!hashSet[hashValue]) {
+            hashSet[hashValue] = true;
+            found++;
+            if (found == totalNeeded) return true;
+        }
+    }
+
+    return found == totalNeeded;
+}
