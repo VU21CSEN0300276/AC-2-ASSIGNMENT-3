@@ -1,0 +1,24 @@
+int longestDecomposition(char* text) {
+    int len = strlen(text);
+    int left = 0, right = len - 1, k = 0;
+    
+    while (left <= right) {
+        int subLen = 1;
+        while (left + subLen - 1 < right - subLen + 1 && 
+               strncmp(text + left, text + right - subLen + 1, subLen) != 0) {
+            subLen++;
+        }
+        
+        if (strncmp(text + left, text + right - subLen + 1, subLen) == 0) {
+            k += 2;
+            left += subLen;
+            right -= subLen;
+        } else {
+            break;
+        }
+    }
+    
+    if (left <= right) k++; // Account for the middle part if left and right do not fully match
+    
+    return k;
+}
